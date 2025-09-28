@@ -1,3 +1,3 @@
 module github.com/clong1995/go-ansi-color
 
-go 1.24
+go 1.25
