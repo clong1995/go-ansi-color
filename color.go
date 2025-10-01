@@ -41,18 +41,18 @@ func PrintError(err error) {
 }
 
 func PrintErr(str string, a ...any) {
-	shortLogger.Println(Err(str, a))
+	shortLogger.Println(Err(str, a...))
 }
 
 func PrintSucc(str string, a ...any) {
-	shortLogger.Println(Succ(str, a))
+	shortLogger.Println(Succ(str, a...))
 }
 
 func PrintWarn(str string, a ...any) {
-	shortLogger.Println(Warn(str, a))
+	shortLogger.Println(Warn(str, a...))
 }
 
 func PrintFatal(str string, a ...any) {
-	shortLogger.Println(Fatal(str, a))
+	shortLogger.Println(Fatal(str, a...))
 	os.Exit(1)
 }
