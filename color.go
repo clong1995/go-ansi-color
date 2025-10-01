@@ -54,4 +54,5 @@ func PrintWarn(str string, a ...any) {
 
 func PrintFatal(str string, a ...any) {
 	shortLogger.Println(Fatal(str, a))
+	os.Exit(1)
 }
