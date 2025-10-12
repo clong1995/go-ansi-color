@@ -4,9 +4,20 @@ import (
 	"fmt"
 	"log"
 	"os"
+
+	"github.com/clong1995/go-config"
 )
 
-var shortLogger = log.New(os.Stdout, "", 0)
+var prefix string
+var shortLogger *log.Logger
+
+func init() {
+	prefix = config.Value("PREFIX")
+	if prefix != "" {
+		prefix = "\033[1m[" + prefix + "]\033[0m "
+	}
+	shortLogger = log.New(os.Stdout, prefix, 0)
+}
 
 func Color(color int, str string) string {
 	return fmt.Sprintf("\x1b[%dm%s\x1b[0m", color, str)
