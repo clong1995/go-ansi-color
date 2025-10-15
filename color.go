@@ -4,15 +4,16 @@ import (
 	"fmt"
 	"log"
 	"os"
-
-	"github.com/clong1995/go-config"
 )
 
 var prefix string
 var shortLogger *log.Logger
 
 func init() {
-	prefix = config.Value("PREFIX")
+	shortLogger = log.New(os.Stdout, prefix, 0)
+}
+
+func SetPrefix(prefix string) {
 	if prefix != "" {
 		prefix = "\033[1m[" + prefix + "]\033[0m "
 	}
@@ -64,6 +65,5 @@ func PrintWarn(str string, a ...any) {
 }
 
 func PrintFatal(str string, a ...any) {
-	shortLogger.Println(Fatal(str, a...))
-	os.Exit(1)
+	shortLogger.Fatalln(Fatal(str, a...))
 }
