@@ -6,18 +6,10 @@ import (
 	"os"
 )
 
-var prefix string
 var shortLogger *log.Logger
 
 func init() {
-	shortLogger = log.New(os.Stdout, prefix, 0)
-}
-
-func SetPrefix(prefix string) {
-	if prefix != "" {
-		prefix = "\033[1m[" + prefix + "]\033[0m "
-	}
-	shortLogger = log.New(os.Stdout, prefix, 0)
+	shortLogger = log.New(os.Stdout, "", 0)
 }
 
 func Color(color int, str string) string {
@@ -48,22 +40,29 @@ func Fatal(str string, a ...any) string {
 	return Color(91, "💀 "+str)
 }
 
-func PrintError(err error) {
-	shortLogger.Println(Error(err))
+func PrintError(prefix, str string, a ...any) {
+	p := prefixStr(prefix)
+	shortLogger.Println(p + Err(str, a...))
 }
 
-func PrintErr(str string, a ...any) {
-	shortLogger.Println(Err(str, a...))
+func PrintSucc(prefix, str string, a ...any) {
+	p := prefixStr(prefix)
+	shortLogger.Println(p + Succ(str, a...))
 }
 
-func PrintSucc(str string, a ...any) {
-	shortLogger.Println(Succ(str, a...))
+func PrintWarn(prefix, str string, a ...any) {
+	p := prefixStr(prefix)
+	shortLogger.Println(p + Warn(str, a...))
 }
 
-func PrintWarn(str string, a ...any) {
-	shortLogger.Println(Warn(str, a...))
+func PrintFatal(prefix, str string, a ...any) {
+	p := prefixStr(prefix)
+	shortLogger.Fatalln(p + Fatal(str, a...))
 }
 
-func PrintFatal(str string, a ...any) {
-	shortLogger.Fatalln(Fatal(str, a...))
+func prefixStr(prefix string) string {
+	if prefix != "" {
+		return "\033[1m[" + prefix + "]\033[0m "
+	}
+	return ""
 }
