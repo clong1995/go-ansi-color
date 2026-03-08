@@ -16,62 +16,62 @@ func init() {
 	errLogger = log.New(os.Stderr, "", 0)
 }
 
-// Color applies an ANSI color code to a string.
+// Color 为字符串添加 ANSI 颜色代码。
 func Color(color int, str string) string {
 	return fmt.Sprintf("\x1b[%dm%s\x1b[0m", color, str)
 }
 
-// colorize is a helper function to format and colorize a string.
+// colorize 是一个辅助函数，用于格式化字符串并添加颜色。
 func colorize(color int, emoji string, format string, a ...any) string {
 	str := fmt.Sprintf(format, a...)
 	return Color(color, emoji+" "+str)
 }
 
-// Error formats an error with a red color and a cross emoji.
-// It safely handles error strings that may contain formatting verbs.
+// Error 使用红色和叉号表情符号格式化错误。
+// 它通过 err.Error() 获取对用户友好的错误信息，并能安全地处理包含格式化动词的错误字符串。
 func Error(err error) string {
 	return colorize(31, "❌", "%s", err.Error())
 }
 
-// Err formats a string with a red color and a cross emoji.
+// Err 使用红色和叉号表情符号格式化字符串。
 func Err(format string, a ...any) string {
 	return colorize(31, "❌", format, a...)
 }
 
-// Succ formats a string with a green color and a checkmark emoji.
+// Succ 使用绿色和复选标记表情符号格式化字符串。
 func Succ(format string, a ...any) string {
 	return colorize(32, "✅", format, a...)
 }
 
-// Warn formats a string with a yellow color and a warning emoji.
+// Warn 使用黄色和警告表情符号格式化字符串。
 func Warn(format string, a ...any) string {
 	return colorize(33, "⚠️", format, a...)
 }
 
-// Fatal formats a string with a bright red color and a skull emoji.
+// Fatal 使用亮红色和骷髅表情符号格式化字符串。
 func Fatal(format string, a ...any) string {
 	return colorize(91, "💀", format, a...)
 }
 
-// PrintError prints a formatted error message to stderr.
+// PrintError 将格式化的错误消息打印到 stderr。
 func PrintError(prefix, format string, a ...any) {
 	p := prefixStr(prefix)
 	errLogger.Println(p + Err(format, a...))
 }
 
-// PrintSucc prints a formatted success message to stdout.
+// PrintSucc 将格式化的成功消息打印到 stdout。
 func PrintSucc(prefix, format string, a ...any) {
 	p := prefixStr(prefix)
 	outLogger.Println(p + Succ(format, a...))
 }
 
-// PrintWarn prints a formatted warning message to stderr.
+// PrintWarn 将格式化的警告消息打印到 stderr。
 func PrintWarn(prefix, format string, a ...any) {
 	p := prefixStr(prefix)
 	errLogger.Println(p + Warn(format, a...))
 }
 
-// PrintFatal prints a formatted fatal message to stderr and exits.
+// PrintFatal 将格式化的致命消息打印到 stderr 并退出。
 func PrintFatal(prefix, format string, a ...any) {
 	p := prefixStr(prefix)
 	errLogger.Fatalln(p + Fatal(format, a...))
