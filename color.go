@@ -6,63 +6,80 @@ import (
 	"os"
 )
 
-var shortLogger *log.Logger
+var (
+	outLogger *log.Logger
+	errLogger *log.Logger
+)
 
 func init() {
-	shortLogger = log.New(os.Stdout, "", 0)
+	outLogger = log.New(os.Stdout, "", 0)
+	errLogger = log.New(os.Stderr, "", 0)
 }
 
+// Color applies an ANSI color code to a string.
 func Color(color int, str string) string {
 	return fmt.Sprintf("\x1b[%dm%s\x1b[0m", color, str)
 }
 
+// colorize is a helper function to format and colorize a string.
+func colorize(color int, emoji string, format string, a ...any) string {
+	str := fmt.Sprintf(format, a...)
+	return Color(color, emoji+" "+str)
+}
+
+// Error formats an error with a red color and a cross emoji.
+// It safely handles error strings that may contain formatting verbs.
 func Error(err error) string {
-	return Color(31, "❌ "+err.Error())
+	return colorize(31, "❌", "%s", err.Error())
 }
 
-func Err(str string, a ...any) string {
-	str = fmt.Sprintf(str, a...)
-	return Color(31, "❌ "+str)
+// Err formats a string with a red color and a cross emoji.
+func Err(format string, a ...any) string {
+	return colorize(31, "❌", format, a...)
 }
 
-func Succ(str string, a ...any) string {
-	str = fmt.Sprintf(str, a...)
-	return Color(32, "✅ "+str)
+// Succ formats a string with a green color and a checkmark emoji.
+func Succ(format string, a ...any) string {
+	return colorize(32, "✅", format, a...)
 }
 
-func Warn(str string, a ...any) string {
-	str = fmt.Sprintf(str, a...)
-	return Color(33, "⚠️ "+str)
+// Warn formats a string with a yellow color and a warning emoji.
+func Warn(format string, a ...any) string {
+	return colorize(33, "⚠️", format, a...)
 }
 
-func Fatal(str string, a ...any) string {
-	str = fmt.Sprintf(str, a...)
-	return Color(91, "💀 "+str)
+// Fatal formats a string with a bright red color and a skull emoji.
+func Fatal(format string, a ...any) string {
+	return colorize(91, "💀", format, a...)
 }
 
-func PrintError(prefix, str string, a ...any) {
+// PrintError prints a formatted error message to stderr.
+func PrintError(prefix, format string, a ...any) {
 	p := prefixStr(prefix)
-	shortLogger.Println(p + Err(str, a...))
+	errLogger.Println(p + Err(format, a...))
 }
 
-func PrintSucc(prefix, str string, a ...any) {
+// PrintSucc prints a formatted success message to stdout.
+func PrintSucc(prefix, format string, a ...any) {
 	p := prefixStr(prefix)
-	shortLogger.Println(p + Succ(str, a...))
+	outLogger.Println(p + Succ(format, a...))
 }
 
-func PrintWarn(prefix, str string, a ...any) {
+// PrintWarn prints a formatted warning message to stderr.
+func PrintWarn(prefix, format string, a ...any) {
 	p := prefixStr(prefix)
-	shortLogger.Println(p + Warn(str, a...))
+	errLogger.Println(p + Warn(format, a...))
 }
 
-func PrintFatal(prefix, str string, a ...any) {
+// PrintFatal prints a formatted fatal message to stderr and exits.
+func PrintFatal(prefix, format string, a ...any) {
 	p := prefixStr(prefix)
-	shortLogger.Fatalln(p + Fatal(str, a...))
+	errLogger.Fatalln(p + Fatal(format, a...))
 }
 
 func prefixStr(prefix string) string {
 	if prefix != "" {
-		return "\033[1m[" + prefix + "]\033[0m "
+		return fmt.Sprintf("\x1b[1m[%s]\x1b[0m ", prefix)
 	}
 	return ""
 }
