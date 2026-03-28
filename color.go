@@ -53,10 +53,16 @@ func Fatal(format string, a ...any) string {
 	return colorize(91, "💀", format, a...)
 }
 
-// PrintError 将格式化的错误消息打印到 stderr。
-func PrintError(prefix, format string, a ...any) {
+// PrintErr 将格式化的错误消息打印到 stderr。
+func PrintErr(prefix, format string, a ...any) {
 	p := prefixStr(prefix)
 	errLogger.Println(p + Err(format, a...))
+}
+
+// PrintError 将格式化的错误消息打印到 stderr。
+func PrintError(prefix string, err error) {
+	p := prefixStr(prefix)
+	errLogger.Println(p + Error(err))
 }
 
 // PrintSucc 将格式化的成功消息打印到 stdout。
