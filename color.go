@@ -30,7 +30,7 @@ func colorize(color int, emoji string, format string, a ...any) string {
 // Error 使用红色和叉号表情符号格式化错误。
 // 它通过 err.Error() 获取对用户友好的错误信息，并能安全地处理包含格式化动词的错误字符串。
 func Error(err error) string {
-	return colorize(31, "❌", "%s", err.Error())
+	return Err("%s", err)
 }
 
 // Err 使用红色和叉号表情符号格式化字符串。
@@ -57,6 +57,11 @@ func Fatal(format string, a ...any) string {
 func PrintErr(prefix, format string, a ...any) {
 	p := prefixStr(prefix)
 	errLogger.Println(p + Err(format, a...))
+}
+
+// PrintPkgError 将格式化的错误消息打印到 stderr。
+func PrintPkgError(err error) {
+	errLogger.Println(Err("%+v", err))
 }
 
 // PrintError 将格式化的错误消息打印到 stderr。
