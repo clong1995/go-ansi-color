@@ -59,9 +59,13 @@ func PrintErr(prefix, format string, a ...any) {
 	errLogger.Println(p + Err(format, a...))
 }
 
-// PrintPkgError 将格式化的错误消息打印到 stderr。
-func PrintPkgError(err error) {
-	errLogger.Println(Err("%+v", err))
+// Print 将格式化的错误消息打印到。
+func Print(val any) {
+	if err, ok := val.(error); ok {
+		errLogger.Println(Err("%+v", err))
+	} else {
+		outLogger.Println(colorize(0, "🖨️", "%+v", val))
+	}
 }
 
 // PrintError 将格式化的错误消息打印到 stderr。
